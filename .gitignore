@@ -1,2 +1,7 @@
 .settings/
 .dependencies/
+bin/
+doc/
+lib/
+share/
+src/
