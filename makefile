@@ -8,7 +8,9 @@ $(info $(makefile_directory))
 
 
 .PHONY: all
-all: bin/bison bin/flex lib/libgmp.a lib/libmpfr.a bin/texinfo
+all: bin/gcc
+
+bin/gcc: bin/bison bin/flex lib/libgmp.a lib/libmpc.a lib/libmpfr.a lib/libmpc.a bin/texinfo
 
 #
 # binutils: https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz
@@ -21,7 +23,7 @@ bin/ld: .dependencies/binutils-2.36/ld | bin
 	cd .dependencies/binutils-2.36 && make && touch ld
 
 .dependencies/binutils-2.36/Makefile: .dependencies/binutils-2.36/configure
-	cd .dependencies/binutils-2.36 && ./configure --prefix="$(makefile_directory)" 
+	cd .dependencies/binutils-2.36 && ./configure --prefix="$(makefile_directory)"
 	touch .dependencies/binutils-2.36/Makefile
 	   
 .dependencies/binutils-2.36/configure: .dependencies/binutils-2.36.tar.gz
@@ -29,8 +31,6 @@ bin/ld: .dependencies/binutils-2.36/ld | bin
 	
 .dependencies/binutils-3.7.tar.gz: makefile | .dependencies
 	cd .dependencies && wget -N https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz && touch binutils-3.7.tar.gz
-
-	   
 
 
 #
@@ -78,6 +78,28 @@ bin/flex: .dependencies/flex-2.6.3/src/flex | bin
 	   
 
 #
+# gcc: https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.gz
+#
+bin/gcc: .dependencies/gcc-10.2.0/src/gcc | bin
+	cd .dependencies/gcc-10.2.0 && make install
+	touch bin/gcc
+
+.dependencies/gcc-10.2.0/src/gcc: .dependencies/gcc-10.2.0/Makefile
+	cd .dependencies/gcc-10.2.0 && make && touch src/gcc
+	
+.dependencies/gcc-10.2.0/Makefile: .dependencies/gcc-10.2.0/configure
+	cd .dependencies/gcc-10.2.0 && ./configure --prefix="$(makefile_directory)" --disable-multilib --with-gmp="$(makefile_directory)" --with-mpfr="$(makefile_directory)" --with-mpc="$(makefile_directory)"
+	touch .dependencies/gcc-10.2.0/Makefile
+
+.dependencies/gcc-10.2.0/configure: .dependencies/gcc-10.2.0.tar.gz
+	cd .dependencies && tar xzf gcc-10.2.0.tar.gz
+	touch .dependencies/gcc-10.2.0/configure
+
+.dependencies/gcc-10.2.0.tar.gz: makefile | .dependencies 
+	cd .dependencies && wget -N https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.gz && touch gcc-10.2.0.tar.gz
+
+
+#
 # gmp: https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
 #
 lib/libgmp.a: .dependencies/gmp-6.2.1/libgmp.la | lib include
@@ -98,6 +120,27 @@ lib/libgmp.a: .dependencies/gmp-6.2.1/libgmp.la | lib include
 .dependencies/gmp-6.2.1.tar.xz: makefile | .dependencies 
 	cd .dependencies && wget -N https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz && touch gmp-6.2.1.tar.xz
 	   
+#
+# mpc: http://www.multiprecision.org/downloads/mpc-1.2.0.tar.gz
+#
+lib/libmpc.a: lib/libgmp.a .dependencies/mpc-1.2.0/libmpc.la | lib include
+	cd .dependencies/mpc-1.2.0 && make install
+	touch lib/libmpc.a
+
+.dependencies/mpc-1.2.0/libmpc.la: .dependencies/mpc-1.2.0/Makefile
+	cd .dependencies/mpc-1.2.0 && make && touch libmpc.la
+	
+.dependencies/mpc-1.2.0/Makefile: .dependencies/mpc-1.2.0/configure
+	cd .dependencies/mpc-1.2.0 && ./configure --prefix="$(makefile_directory)" CFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib"
+	touch .dependencies/mpc-1.2.0/Makefile
+
+.dependencies/mpc-1.2.0/configure: .dependencies/mpc-1.2.0.tar.gz
+	cd .dependencies && tar xzf mpc-1.2.0.tar.gz
+	touch .dependencies/mpc-1.2.0/configure
+
+.dependencies/mpc-1.2.0.tar.gz: makefile | .dependencies 
+	cd .dependencies && wget -N http://www.multiprecision.org/downloads/mpc-1.2.0.tar.gz && touch mpc-1.2.0.tar.gz
+
 
 #
 # mpfr: https://www.mpfr.org/mpfr-current/mpfr-4.1.0.tar.gz
