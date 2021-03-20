@@ -12,7 +12,7 @@ all: bin/bison bin/flex lib/libgmp.a lib/libmpfr.a bin/texinfo
 
 
 #
-# bison
+# bison: http://ftp.gnu.org/gnu/bison/bison-3.7.tar.gz
 #
 bin/bison: .dependencies/bison-3.7/src/bison | bin
 	cd .dependencies/bison-3.7 && make install
@@ -33,7 +33,7 @@ bin/bison: .dependencies/bison-3.7/src/bison | bin
 
 	   
 #
-# flex
+# flex: https://github.com/westes/flex/releases/download/v2.6.3/flex-2.6.3.tar.gz
 #
 bin/flex: .dependencies/flex-2.6.3/src/flex | bin
 	cd .dependencies/flex-2.6.3 && make install
@@ -56,7 +56,7 @@ bin/flex: .dependencies/flex-2.6.3/src/flex | bin
 	   
 
 #
-# gmp
+# gmp: https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
 #
 lib/libgmp.a: .dependencies/gmp-6.2.1/libgmp.la | lib include
 	cd .dependencies/gmp-6.2.1 && make install
@@ -78,7 +78,7 @@ lib/libgmp.a: .dependencies/gmp-6.2.1/libgmp.la | lib include
 	   
 
 #
-# mpfr
+# mpfr: https://www.mpfr.org/mpfr-current/mpfr-4.1.0.tar.gz
 #
 lib/libmpfr.a: lib/libgmp.a .dependencies/mpfr-4.1.0/libmpfr.la | lib include
 	cd .dependencies/mpfr-4.1.0 && make install
@@ -99,10 +99,8 @@ lib/libmpfr.a: lib/libgmp.a .dependencies/mpfr-4.1.0/libmpfr.la | lib include
 	cd .dependencies && wget -N https://www.mpfr.org/mpfr-current/mpfr-4.1.0.tar.gz && touch mpfr-4.1.0.tar.gz
 	   
 	   
-
-http://ftp.gnu.org/gnu/texinfo/texinfo-6.7.tar.gz
 #
-# texinfo
+# texinfo: http://ftp.gnu.org/gnu/texinfo/texinfo-6.7.tar.gz
 #
 bin/info: .dependencies/texinfo-6.7/info | bin
 	cd .dependencies/texinfo-6.7 && make install
@@ -122,8 +120,27 @@ bin/info: .dependencies/texinfo-6.7/info | bin
 	cd .dependencies && wget -N http://ftp.gnu.org/gnu/texinfo/texinfo-6.7.tar.gz && touch texinfo-6.7.tar.gz
 
 	   
+#
+# isl: http://isl.gforge.inria.fr/isl-0.23.tar.gz
+#
+lib/libisl.a: lib/libgmp.a .dependencies/isl-0.23/libisl.la | lib include
+	cd .dependencies/isl-0.23 && make install
+	touch lib/libisl.a
 
+.dependencies/isl-0.23/libisl.la: .dependencies/isl-0.23/Makefile
+	cd .dependencies/isl-0.23 && make && touch libisl.la
+	
+.dependencies/isl-0.23/Makefile: .dependencies/isl-0.23/configure
+	cd .dependencies/isl-0.23 && ./configure --prefix="$(makefile_directory)" CPPFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib"
+	touch .dependencies/isl-0.23/Makefile
 
+.dependencies/isl-0.23/configure: .dependencies/isl-0.23.tar.gz
+	cd .dependencies && tar xzf isl-0.23.tar.gz
+	touch .dependencies/isl-0.23/configure
+
+.dependencies/isl-0.23.tar.gz: makefile | .dependencies 
+	cd .dependencies && wget -N http://isl.gforge.inria.fr/isl-0.23.tar.gz && touch isl-0.23.tar.gz
+	   
 
 
 #
