@@ -10,6 +10,28 @@ $(info $(makefile_directory))
 .PHONY: all
 all: bin/bison bin/flex lib/libgmp.a lib/libmpfr.a bin/texinfo
 
+#
+# binutils: https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz
+#
+bin/ld: .dependencies/binutils-2.36/ld | bin
+	cd .dependencies/binutils-2.36 && make install
+	touch bin/binutils
+
+.dependencies/binutils-2.36/ld: .dependencies/binutils-2.36/Makefile
+	cd .dependencies/binutils-2.36 && make && touch ld
+
+.dependencies/binutils-2.36/Makefile: .dependencies/binutils-2.36/configure
+	cd .dependencies/binutils-2.36 && ./configure --prefix="$(makefile_directory)" 
+	touch .dependencies/binutils-2.36/Makefile
+	   
+.dependencies/binutils-2.36/configure: .dependencies/binutils-2.36.tar.gz
+	cd .dependencies && tar xzf binutils-2.36.tar.gz && touch binutils-2.36/configure
+	
+.dependencies/binutils-3.7.tar.gz: makefile | .dependencies
+	cd .dependencies && wget -N https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz && touch binutils-3.7.tar.gz
+
+	   
+
 
 #
 # bison: http://ftp.gnu.org/gnu/bison/bison-3.7.tar.gz
