@@ -8,7 +8,7 @@ $(info $(makefile_directory))
 
 
 .PHONY: all
-all: bin/bison bin/flex lib/libgmp.a
+all: bin/bison bin/flex lib/libgmp.a lib/libmpfr.a
 
 
 #
@@ -75,6 +75,28 @@ lib/libgmp.a: .dependencies/gmp-6.2.1/libgmp.la | lib include
 
 .dependencies/gmp-6.2.1.tar.xz: makefile | .dependencies 
 	cd .dependencies && wget -N https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz && touch gmp-6.2.1.tar.xz
+	   
+
+#
+# mpfr
+#
+lib/libmpfr.a: lib/libgmp.a .dependencies/mpfr-4.1.0/libmpfr.la | lib include
+	cd .dependencies/mpfr-4.1.0 && make install
+	touch lib/libmpfr.a
+
+.dependencies/mpfr-4.1.0/libmpfr.la: .dependencies/mpfr-4.1.0/Makefile
+	cd .dependencies/mpfr-4.1.0 && make && touch libmpfr.la
+	
+.dependencies/mpfr-4.1.0/Makefile: .dependencies/mpfr-4.1.0/configure
+	cd .dependencies/mpfr-4.1.0 && ./configure --prefix="$(makefile_directory)" CFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib"
+	touch .dependencies/mpfr-4.1.0/Makefile
+
+.dependencies/mpfr-4.1.0/configure: .dependencies/mpfr-4.1.0.tar.gz
+	cd .dependencies && tar xzf mpfr-4.1.0.tar.gz
+	touch .dependencies/mpfr-4.1.0/configure
+
+.dependencies/mpfr-4.1.0.tar.gz: makefile | .dependencies 
+	cd .dependencies && wget -N https://www.mpfr.org/mpfr-current/mpfr-4.1.0.tar.gz && touch mpfr-4.1.0.tar.gz
 	   
 
 
