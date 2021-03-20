@@ -8,7 +8,7 @@ $(info $(makefile_directory))
 
 
 .PHONY: all
-all: bin/bison bin/flex lib/libgmp.a lib/libmpfr.a
+all: bin/bison bin/flex lib/libgmp.a lib/libmpfr.a bin/texinfo
 
 
 #
@@ -98,6 +98,31 @@ lib/libmpfr.a: lib/libgmp.a .dependencies/mpfr-4.1.0/libmpfr.la | lib include
 .dependencies/mpfr-4.1.0.tar.gz: makefile | .dependencies 
 	cd .dependencies && wget -N https://www.mpfr.org/mpfr-current/mpfr-4.1.0.tar.gz && touch mpfr-4.1.0.tar.gz
 	   
+	   
+
+http://ftp.gnu.org/gnu/texinfo/texinfo-6.7.tar.gz
+#
+# texinfo
+#
+bin/info: .dependencies/texinfo-6.7/info | bin
+	cd .dependencies/texinfo-6.7 && make install
+	touch bin/info
+
+.dependencies/texinfo-6.7/info: .dependencies/texinfo-6.7/Makefile
+	cd .dependencies/texinfo-6.7 && make && touch info
+
+.dependencies/texinfo-6.7/Makefile: .dependencies/texinfo-6.7/configure
+	cd .dependencies/texinfo-6.7 && ./configure --prefix="$(makefile_directory)" 
+	touch .dependencies/texinfo-6.7/Makefile
+	   
+.dependencies/texinfo-6.7/configure: .dependencies/texinfo-6.7.tar.gz
+	cd .dependencies && tar xzf texinfo-6.7.tar.gz && touch texinfo-6.7/configure
+	
+.dependencies/texinfo-6.7.tar.gz: makefile | .dependencies
+	cd .dependencies && wget -N http://ftp.gnu.org/gnu/texinfo/texinfo-6.7.tar.gz && touch texinfo-6.7.tar.gz
+
+	   
+
 
 
 
