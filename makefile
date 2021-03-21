@@ -4,7 +4,11 @@ SHELL = /bin/bash
 makefile_directory=$(realpath $(dir $(firstword $(MAKEFILE_LIST))))
 $(info $(makefile_directory))
 
-
+CC:=/usr/bin/gcc
+CXX:=/usr/bin/g++
+AR:=/usr/bin/ar
+RANLIB:=/usr/bin/ranlib
+LD:=/usr/bin/ld
 
 
 .PHONY: all
@@ -80,15 +84,15 @@ bin/flex: .dependencies/flex-2.6.3/src/flex | bin
 #
 # gcc: https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.gz
 #
-bin/gcc: .dependencies/gcc-10.2.0/src/gcc | bin
+bin/gcc: .dependencies/gcc-10.2.0/gcc | bin
 	cd .dependencies/gcc-10.2.0 && make install
 	touch bin/gcc
 
-.dependencies/gcc-10.2.0/src/gcc: .dependencies/gcc-10.2.0/Makefile
-	cd .dependencies/gcc-10.2.0 && make && touch src/gcc
+.dependencies/gcc-10.2.0/gcc: .dependencies/gcc-10.2.0/Makefile
+	cd .dependencies/gcc-10.2.0 && make && touch gcc
 	
 .dependencies/gcc-10.2.0/Makefile: .dependencies/gcc-10.2.0/configure
-	cd .dependencies/gcc-10.2.0 && ./configure --prefix="$(makefile_directory)" --disable-multilib --with-gmp="$(makefile_directory)" --with-mpfr="$(makefile_directory)" --with-mpc="$(makefile_directory)"
+	cd .dependencies/gcc-10.2.0 && ./configure --prefix="$(makefile_directory)" --disable-multilib LDFLAGS="-L$(makefile_directory)/lib" --with-gmp="$(makefile_directory)" --with-mpfr="$(makefile_directory)" --with-mpc="$(makefile_directory)"
 	touch .dependencies/gcc-10.2.0/Makefile
 
 .dependencies/gcc-10.2.0/configure: .dependencies/gcc-10.2.0.tar.gz
