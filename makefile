@@ -14,29 +14,6 @@ LD:=/usr/bin/ld
 .PHONY: all
 all: bin/gcc
 
-bin/gcc: bin/bison bin/flex lib/libgmp.a lib/libmpc.a lib/libmpfr.a lib/libmpc.a bin/texinfo
-
-#
-# binutils: https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz
-#
-bin/ld: .dependencies/binutils-2.36/ld | bin
-	cd .dependencies/binutils-2.36 && make install
-	touch bin/binutils
-
-.dependencies/binutils-2.36/ld: .dependencies/binutils-2.36/Makefile
-	cd .dependencies/binutils-2.36 && make && touch ld
-
-.dependencies/binutils-2.36/Makefile: .dependencies/binutils-2.36/configure
-	cd .dependencies/binutils-2.36 && ./configure --prefix="$(makefile_directory)"
-	touch .dependencies/binutils-2.36/Makefile
-	   
-.dependencies/binutils-2.36/configure: .dependencies/binutils-2.36.tar.gz
-	cd .dependencies && tar xzf binutils-2.36.tar.gz && touch binutils-2.36/configure
-	
-.dependencies/binutils-3.7.tar.gz: makefile | .dependencies
-	cd .dependencies && wget -N https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz && touch binutils-3.7.tar.gz
-
-
 #
 # bison: http://ftp.gnu.org/gnu/bison/bison-3.7.tar.gz
 #
@@ -84,7 +61,7 @@ bin/flex: .dependencies/flex-2.6.3/src/flex | bin
 #
 # gcc: https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.gz
 #
-bin/gcc: .dependencies/gcc-10.2.0/gcc | bin
+bin/gcc: bin/bison bin/flex lib/libgmp.a bin/ld lib/libmpc.a lib/libmpfr.a lib/libmpc.a bin/info .dependencies/gcc-10.2.0/gcc | bin
 	cd .dependencies/gcc-10.2.0 && make install
 	touch bin/gcc
 
@@ -101,6 +78,27 @@ bin/gcc: .dependencies/gcc-10.2.0/gcc | bin
 
 .dependencies/gcc-10.2.0.tar.gz: makefile | .dependencies 
 	cd .dependencies && wget -N https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.gz && touch gcc-10.2.0.tar.gz
+
+
+#
+# binutils: https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz
+#
+bin/ld: .dependencies/binutils-2.36/ld | bin
+	cd .dependencies/binutils-2.36 && make install
+	touch bin/binutils
+
+.dependencies/binutils-2.36/ld: .dependencies/binutils-2.36/Makefile
+	cd .dependencies/binutils-2.36 && make && touch ld
+
+.dependencies/binutils-2.36/Makefile: .dependencies/binutils-2.36/configure
+	cd .dependencies/binutils-2.36 && ./configure --prefix="$(makefile_directory)"
+	touch .dependencies/binutils-2.36/Makefile
+	   
+.dependencies/binutils-2.36/configure: .dependencies/binutils-2.36.tar.gz
+	cd .dependencies && tar xzf binutils-2.36.tar.gz && touch binutils-2.36/configure
+	
+.dependencies/binutils-2.36.tar.gz: makefile | .dependencies
+	cd .dependencies && wget -N https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz && touch binutils-2.36.tar.gz
 
 
 #
@@ -127,7 +125,7 @@ lib/libgmp.a: .dependencies/gmp-6.2.1/libgmp.la | lib include
 #
 # mpc: http://www.multiprecision.org/downloads/mpc-1.2.0.tar.gz
 #
-lib/libmpc.a: lib/libgmp.a .dependencies/mpc-1.2.0/libmpc.la | lib include
+lib/libmpc.a: lib/libmpfr.a .dependencies/mpc-1.2.0/libmpc.la | lib include
 	cd .dependencies/mpc-1.2.0 && make install
 	touch lib/libmpc.a
 
@@ -165,7 +163,7 @@ lib/libmpfr.a: lib/libgmp.a .dependencies/mpfr-4.1.0/libmpfr.la | lib include
 	touch .dependencies/mpfr-4.1.0/configure
 
 .dependencies/mpfr-4.1.0.tar.gz: makefile | .dependencies 
-	cd .dependencies && wget -N https://www.mpfr.org/mpfr-current/mpfr-4.1.0.tar.gz && touch mpfr-4.1.0.tar.gz
+	cd .dependencies && wget -N https://ftp.gnu.org/gnu/mpfr/mpfr-4.1.0.tar.gz && touch mpfr-4.1.0.tar.gz
 	   
 	   
 #

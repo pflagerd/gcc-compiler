@@ -6,3 +6,5 @@ lib/
 share/
 src/
 include/
+lib64/
+libexec/
