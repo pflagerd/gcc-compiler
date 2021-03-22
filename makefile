@@ -15,6 +15,7 @@ LD:=/usr/bin/ld
 # Set to a number between 1 and the number of CPUs (or cores) on your build machine
 #
 MAXIMUM_CPUS:=16
+#$(info MAXIMUM_CPUS = ${MAXIMUM_CPUS})
 
 
 .PHONY: all
@@ -23,7 +24,7 @@ all: bin/gcc
 #
 # bison: http://ftp.gnu.org/gnu/bison/bison-3.7.tar.gz
 #
-bin/bison: .dependencies/bison-3.7/src/bison | bin
+bin/bison: .dependencies/bison-3.7/src/bison | bin lib64
 	cd .dependencies/bison-3.7 && make install
 	touch bin/bison
 
@@ -44,7 +45,7 @@ bin/bison: .dependencies/bison-3.7/src/bison | bin
 #
 # flex: https://github.com/westes/flex/releases/download/v2.6.3/flex-2.6.3.tar.gz
 #
-bin/flex: .dependencies/flex-2.6.3/src/flex | bin
+bin/flex: .dependencies/flex-2.6.3/src/flex | bin lib64
 	cd .dependencies/flex-2.6.3 && make install
 	touch bin/flex
 
@@ -67,14 +68,14 @@ bin/flex: .dependencies/flex-2.6.3/src/flex | bin
 #
 # gcc: https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.gz
 #
-bin/gcc: bin/bison bin/flex lib64/libgmp.a bin/ld lib64/libmpc.a lib64/libmpfr.a lib64/libmpc.a bin/info .dependencies/gcc-10.2.0/gcc | bin
+bin/gcc: .dependencies/gcc-10.2.0/gcc | bin lib64
 	cd .dependencies/gcc-10.2.0 && make install
 	touch bin/gcc
 
 .dependencies/gcc-10.2.0/gcc: .dependencies/gcc-10.2.0/Makefile
 	cd .dependencies/gcc-10.2.0 && make -j $(MAXIMUM_CPUS) && touch gcc
 	
-.dependencies/gcc-10.2.0/Makefile: .dependencies/gcc-10.2.0/configure
+.dependencies/gcc-10.2.0/Makefile: .dependencies/gcc-10.2.0/configure bin/bison bin/flex lib64/libgmp.a bin/ld lib64/libmpc.a lib64/libmpfr.a bin/info
 	cd .dependencies/gcc-10.2.0 && ./configure --prefix="$(makefile_directory)" --disable-multilib LDFLAGS="-L$(makefile_directory)/lib64" --with-gmp="$(makefile_directory)" --with-mpfr="$(makefile_directory)" --with-mpc="$(makefile_directory)"
 	touch .dependencies/gcc-10.2.0/Makefile
 
@@ -89,7 +90,7 @@ bin/gcc: bin/bison bin/flex lib64/libgmp.a bin/ld lib64/libmpc.a lib64/libmpfr.a
 #
 # binutils: https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz
 #
-bin/ld: .dependencies/binutils-2.36/ld | bin
+bin/ld: .dependencies/binutils-2.36/ld | bin lib64
 	cd .dependencies/binutils-2.36 && make install
 	touch bin/binutils
 
@@ -131,14 +132,14 @@ lib64/libgmp.a: .dependencies/gmp-6.2.1/libgmp.la | lib64 include
 #
 # mpc: http://www.multiprecision.org/downloads/mpc-1.2.0.tar.gz
 #
-lib64/libmpc.a: lib64/libmpfr.a .dependencies/mpc-1.2.0/libmpc.la | lib64 include
+lib64/libmpc.a: .dependencies/mpc-1.2.0/libmpc.la | lib64 include
 	cd .dependencies/mpc-1.2.0 && make install
 	touch lib64/libmpc.a
 
 .dependencies/mpc-1.2.0/libmpc.la: .dependencies/mpc-1.2.0/Makefile
 	cd .dependencies/mpc-1.2.0 && make -j $(MAXIMUM_CPUS) && touch libmpc.la
 	
-.dependencies/mpc-1.2.0/Makefile: .dependencies/mpc-1.2.0/configure
+.dependencies/mpc-1.2.0/Makefile: .dependencies/mpc-1.2.0/configure lib64/libmpfr.a
 	cd .dependencies/mpc-1.2.0 && ./configure --prefix="$(makefile_directory)" CFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib64"
 	touch .dependencies/mpc-1.2.0/Makefile
 
@@ -153,14 +154,14 @@ lib64/libmpc.a: lib64/libmpfr.a .dependencies/mpc-1.2.0/libmpc.la | lib64 includ
 #
 # mpfr: https://www.mpfr.org/mpfr-current/mpfr-4.1.0.tar.gz
 #
-lib64/libmpfr.a: lib64/libgmp.a .dependencies/mpfr-4.1.0/libmpfr.la | lib64 include
+lib64/libmpfr.a: .dependencies/mpfr-4.1.0/libmpfr.la | lib64 include
 	cd .dependencies/mpfr-4.1.0 && make install
 	touch lib64/libmpfr.a
 
 .dependencies/mpfr-4.1.0/libmpfr.la: .dependencies/mpfr-4.1.0/Makefile
 	cd .dependencies/mpfr-4.1.0 && make -j $(MAXIMUM_CPUS) && touch libmpfr.la
 	
-.dependencies/mpfr-4.1.0/Makefile: .dependencies/mpfr-4.1.0/configure
+.dependencies/mpfr-4.1.0/Makefile: .dependencies/mpfr-4.1.0/configure lib64/libgmp.a 
 	cd .dependencies/mpfr-4.1.0 && ./configure --prefix="$(makefile_directory)" CFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib64"
 	touch .dependencies/mpfr-4.1.0/Makefile
 
@@ -175,7 +176,7 @@ lib64/libmpfr.a: lib64/libgmp.a .dependencies/mpfr-4.1.0/libmpfr.la | lib64 incl
 #
 # texinfo: http://ftp.gnu.org/gnu/texinfo/texinfo-6.7.tar.gz
 #
-bin/info: .dependencies/texinfo-6.7/info | bin
+bin/info: .dependencies/texinfo-6.7/info | bin lib64
 	cd .dependencies/texinfo-6.7 && make install
 	touch bin/info
 
@@ -196,14 +197,14 @@ bin/info: .dependencies/texinfo-6.7/info | bin
 #
 # isl: http://isl.gforge.inria.fr/isl-0.23.tar.gz
 #
-lib64/libisl.a: lib64/libgmp.a .dependencies/isl-0.23/libisl.la | lib64 include
+lib64/libisl.a: .dependencies/isl-0.23/libisl.la | lib64 include
 	cd .dependencies/isl-0.23 && make install
 	touch lib64/libisl.a
 
 .dependencies/isl-0.23/libisl.la: .dependencies/isl-0.23/Makefile
 	cd .dependencies/isl-0.23 && make -j $(MAXIMUM_CPUS) && touch libisl.la
 	
-.dependencies/isl-0.23/Makefile: .dependencies/isl-0.23/configure
+.dependencies/isl-0.23/Makefile: .dependencies/isl-0.23/configure lib64/libgmp.a
 	cd .dependencies/isl-0.23 && ./configure --prefix="$(makefile_directory)" CPPFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib64"
 	touch .dependencies/isl-0.23/Makefile
 

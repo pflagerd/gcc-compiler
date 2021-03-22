@@ -2,9 +2,10 @@
 .settings/
 .dependencies/
 bin/
-lib/
+/lib
 share/
 src/
 include/
 lib64/
 libexec/
+x86_64-pc-linux-gnu/
