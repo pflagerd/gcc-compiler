@@ -76,7 +76,7 @@ bin/gcc: .dependencies/gcc-10.2.0/gcc | bin lib64
 	cd .dependencies/gcc-10.2.0 && make -j $(MAXIMUM_CPUS) && touch gcc
 	
 .dependencies/gcc-10.2.0/Makefile: .dependencies/gcc-10.2.0/configure bin/bison bin/flex lib64/libgmp.a bin/ld lib64/libmpc.a lib64/libmpfr.a bin/info
-	cd .dependencies/gcc-10.2.0 && ./configure --prefix="$(makefile_directory)" --disable-multilib LDFLAGS="-L$(makefile_directory)/lib64" --with-gmp="$(makefile_directory)" --with-mpfr="$(makefile_directory)" --with-mpc="$(makefile_directory)"
+	cd .dependencies/gcc-10.2.0 && ./configure --enable-languages=c,c++,d,fortran --prefix="$(makefile_directory)" --disable-multilib LDFLAGS="-L$(makefile_directory)/lib64" --with-gmp="$(makefile_directory)" --with-mpfr="$(makefile_directory)" --with-mpc="$(makefile_directory)"
 	touch .dependencies/gcc-10.2.0/Makefile
 
 .dependencies/gcc-10.2.0/configure: .dependencies/gcc-10.2.0.tar.gz
