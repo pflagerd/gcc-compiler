@@ -22,7 +22,7 @@ bin/bison: .dependencies/bison-3.7/src/bison | bin
 	touch bin/bison
 
 .dependencies/bison-3.7/src/bison: .dependencies/bison-3.7/Makefile
-	cd .dependencies/bison-3.7 && make && touch src/bison
+	cd .dependencies/bison-3.7 && make -j 16 && touch src/bison
 
 .dependencies/bison-3.7/Makefile: .dependencies/bison-3.7/configure
 	cd .dependencies/bison-3.7 && ./configure --prefix="$(makefile_directory)" 
@@ -43,7 +43,7 @@ bin/flex: .dependencies/flex-2.6.3/src/flex | bin
 	touch bin/flex
 
 .dependencies/flex-2.6.3/src/flex: .dependencies/flex-2.6.3/Makefile
-	cd .dependencies/flex-2.6.3 && make && touch src/flex
+	cd .dependencies/flex-2.6.3 && make -j 16 && touch src/flex
 	
 .dependencies/flex-2.6.3/Makefile: .dependencies/flex-2.6.3/configure
 	cd .dependencies/flex-2.6.3 && ./configure --prefix="$(makefile_directory)"
@@ -66,7 +66,7 @@ bin/gcc: bin/bison bin/flex lib/libgmp.a bin/ld lib/libmpc.a lib/libmpfr.a lib/l
 	touch bin/gcc
 
 .dependencies/gcc-10.2.0/gcc: .dependencies/gcc-10.2.0/Makefile
-	cd .dependencies/gcc-10.2.0 && make && touch gcc
+	cd .dependencies/gcc-10.2.0 && make -j 16 && touch gcc
 	
 .dependencies/gcc-10.2.0/Makefile: .dependencies/gcc-10.2.0/configure
 	cd .dependencies/gcc-10.2.0 && ./configure --prefix="$(makefile_directory)" --disable-multilib LDFLAGS="-L$(makefile_directory)/lib" --with-gmp="$(makefile_directory)" --with-mpfr="$(makefile_directory)" --with-mpc="$(makefile_directory)"
@@ -88,7 +88,7 @@ bin/ld: .dependencies/binutils-2.36/ld | bin
 	touch bin/binutils
 
 .dependencies/binutils-2.36/ld: .dependencies/binutils-2.36/Makefile
-	cd .dependencies/binutils-2.36 && make && touch ld
+	cd .dependencies/binutils-2.36 && make -j 16 && touch ld
 
 .dependencies/binutils-2.36/Makefile: .dependencies/binutils-2.36/configure
 	cd .dependencies/binutils-2.36 && ./configure --prefix="$(makefile_directory)"
@@ -109,7 +109,7 @@ lib/libgmp.a: .dependencies/gmp-6.2.1/libgmp.la | lib include
 	touch lib/libgmp.a
 
 .dependencies/gmp-6.2.1/libgmp.la: .dependencies/gmp-6.2.1/Makefile
-	cd .dependencies/gmp-6.2.1 && make && touch libgmp.la
+	cd .dependencies/gmp-6.2.1 && make -j 16 && touch libgmp.la
 	
 .dependencies/gmp-6.2.1/Makefile: .dependencies/gmp-6.2.1/configure
 	cd .dependencies/gmp-6.2.1 && ./configure --prefix="$(makefile_directory)"
@@ -130,7 +130,7 @@ lib/libmpc.a: lib/libmpfr.a .dependencies/mpc-1.2.0/libmpc.la | lib include
 	touch lib/libmpc.a
 
 .dependencies/mpc-1.2.0/libmpc.la: .dependencies/mpc-1.2.0/Makefile
-	cd .dependencies/mpc-1.2.0 && make && touch libmpc.la
+	cd .dependencies/mpc-1.2.0 && make -j 16 && touch libmpc.la
 	
 .dependencies/mpc-1.2.0/Makefile: .dependencies/mpc-1.2.0/configure
 	cd .dependencies/mpc-1.2.0 && ./configure --prefix="$(makefile_directory)" CFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib"
@@ -152,7 +152,7 @@ lib/libmpfr.a: lib/libgmp.a .dependencies/mpfr-4.1.0/libmpfr.la | lib include
 	touch lib/libmpfr.a
 
 .dependencies/mpfr-4.1.0/libmpfr.la: .dependencies/mpfr-4.1.0/Makefile
-	cd .dependencies/mpfr-4.1.0 && make && touch libmpfr.la
+	cd .dependencies/mpfr-4.1.0 && make -j 16 && touch libmpfr.la
 	
 .dependencies/mpfr-4.1.0/Makefile: .dependencies/mpfr-4.1.0/configure
 	cd .dependencies/mpfr-4.1.0 && ./configure --prefix="$(makefile_directory)" CFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib"
@@ -174,7 +174,7 @@ bin/info: .dependencies/texinfo-6.7/info | bin
 	touch bin/info
 
 .dependencies/texinfo-6.7/info: .dependencies/texinfo-6.7/Makefile
-	cd .dependencies/texinfo-6.7 && make && touch info
+	cd .dependencies/texinfo-6.7 && make -j 16 && touch info
 
 .dependencies/texinfo-6.7/Makefile: .dependencies/texinfo-6.7/configure
 	cd .dependencies/texinfo-6.7 && ./configure --prefix="$(makefile_directory)" 
@@ -195,7 +195,7 @@ lib/libisl.a: lib/libgmp.a .dependencies/isl-0.23/libisl.la | lib include
 	touch lib/libisl.a
 
 .dependencies/isl-0.23/libisl.la: .dependencies/isl-0.23/Makefile
-	cd .dependencies/isl-0.23 && make && touch libisl.la
+	cd .dependencies/isl-0.23 && make -j 16 && touch libisl.la
 	
 .dependencies/isl-0.23/Makefile: .dependencies/isl-0.23/configure
 	cd .dependencies/isl-0.23 && ./configure --prefix="$(makefile_directory)" CPPFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib"

@@ -17,3 +17,7 @@ What functions and capabilities exist in the gcc eco-system.
 
 
 Put  into makefile: autoconf, automake and libtool versions dependencies.
+
+
+
+How much information is needed before you can understand gcc ecosystem.
