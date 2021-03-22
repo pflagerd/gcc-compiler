@@ -67,7 +67,7 @@ bin/flex: .dependencies/flex-2.6.3/src/flex | bin
 #
 # gcc: https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.gz
 #
-bin/gcc: bin/bison bin/flex lib/libgmp.a bin/ld lib/libmpc.a lib/libmpfr.a lib/libmpc.a bin/info .dependencies/gcc-10.2.0/gcc | bin
+bin/gcc: bin/bison bin/flex lib64/libgmp.a bin/ld lib64/libmpc.a lib64/libmpfr.a lib64/libmpc.a bin/info .dependencies/gcc-10.2.0/gcc | bin
 	cd .dependencies/gcc-10.2.0 && make install
 	touch bin/gcc
 
@@ -75,7 +75,7 @@ bin/gcc: bin/bison bin/flex lib/libgmp.a bin/ld lib/libmpc.a lib/libmpfr.a lib/l
 	cd .dependencies/gcc-10.2.0 && make -j $(MAXIMUM_CPUS) && touch gcc
 	
 .dependencies/gcc-10.2.0/Makefile: .dependencies/gcc-10.2.0/configure
-	cd .dependencies/gcc-10.2.0 && ./configure --prefix="$(makefile_directory)" --disable-multilib LDFLAGS="-L$(makefile_directory)/lib" --with-gmp="$(makefile_directory)" --with-mpfr="$(makefile_directory)" --with-mpc="$(makefile_directory)"
+	cd .dependencies/gcc-10.2.0 && ./configure --prefix="$(makefile_directory)" --disable-multilib LDFLAGS="-L$(makefile_directory)/lib64" --with-gmp="$(makefile_directory)" --with-mpfr="$(makefile_directory)" --with-mpc="$(makefile_directory)"
 	touch .dependencies/gcc-10.2.0/Makefile
 
 .dependencies/gcc-10.2.0/configure: .dependencies/gcc-10.2.0.tar.gz
@@ -110,9 +110,9 @@ bin/ld: .dependencies/binutils-2.36/ld | bin
 #
 # gmp: https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
 #
-lib/libgmp.a: .dependencies/gmp-6.2.1/libgmp.la | lib include
+lib64/libgmp.a: .dependencies/gmp-6.2.1/libgmp.la | lib64 include
 	cd .dependencies/gmp-6.2.1 && make install
-	touch lib/libgmp.a
+	touch lib64/libgmp.a
 
 .dependencies/gmp-6.2.1/libgmp.la: .dependencies/gmp-6.2.1/Makefile
 	cd .dependencies/gmp-6.2.1 && make -j $(MAXIMUM_CPUS) && touch libgmp.la
@@ -131,15 +131,15 @@ lib/libgmp.a: .dependencies/gmp-6.2.1/libgmp.la | lib include
 #
 # mpc: http://www.multiprecision.org/downloads/mpc-1.2.0.tar.gz
 #
-lib/libmpc.a: lib/libmpfr.a .dependencies/mpc-1.2.0/libmpc.la | lib include
+lib64/libmpc.a: lib64/libmpfr.a .dependencies/mpc-1.2.0/libmpc.la | lib64 include
 	cd .dependencies/mpc-1.2.0 && make install
-	touch lib/libmpc.a
+	touch lib64/libmpc.a
 
 .dependencies/mpc-1.2.0/libmpc.la: .dependencies/mpc-1.2.0/Makefile
 	cd .dependencies/mpc-1.2.0 && make -j $(MAXIMUM_CPUS) && touch libmpc.la
 	
 .dependencies/mpc-1.2.0/Makefile: .dependencies/mpc-1.2.0/configure
-	cd .dependencies/mpc-1.2.0 && ./configure --prefix="$(makefile_directory)" CFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib"
+	cd .dependencies/mpc-1.2.0 && ./configure --prefix="$(makefile_directory)" CFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib64"
 	touch .dependencies/mpc-1.2.0/Makefile
 
 .dependencies/mpc-1.2.0/configure: .dependencies/mpc-1.2.0.tar.gz
@@ -153,15 +153,15 @@ lib/libmpc.a: lib/libmpfr.a .dependencies/mpc-1.2.0/libmpc.la | lib include
 #
 # mpfr: https://www.mpfr.org/mpfr-current/mpfr-4.1.0.tar.gz
 #
-lib/libmpfr.a: lib/libgmp.a .dependencies/mpfr-4.1.0/libmpfr.la | lib include
+lib64/libmpfr.a: lib64/libgmp.a .dependencies/mpfr-4.1.0/libmpfr.la | lib64 include
 	cd .dependencies/mpfr-4.1.0 && make install
-	touch lib/libmpfr.a
+	touch lib64/libmpfr.a
 
 .dependencies/mpfr-4.1.0/libmpfr.la: .dependencies/mpfr-4.1.0/Makefile
 	cd .dependencies/mpfr-4.1.0 && make -j $(MAXIMUM_CPUS) && touch libmpfr.la
 	
 .dependencies/mpfr-4.1.0/Makefile: .dependencies/mpfr-4.1.0/configure
-	cd .dependencies/mpfr-4.1.0 && ./configure --prefix="$(makefile_directory)" CFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib"
+	cd .dependencies/mpfr-4.1.0 && ./configure --prefix="$(makefile_directory)" CFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib64"
 	touch .dependencies/mpfr-4.1.0/Makefile
 
 .dependencies/mpfr-4.1.0/configure: .dependencies/mpfr-4.1.0.tar.gz
@@ -196,15 +196,15 @@ bin/info: .dependencies/texinfo-6.7/info | bin
 #
 # isl: http://isl.gforge.inria.fr/isl-0.23.tar.gz
 #
-lib/libisl.a: lib/libgmp.a .dependencies/isl-0.23/libisl.la | lib include
+lib64/libisl.a: lib64/libgmp.a .dependencies/isl-0.23/libisl.la | lib64 include
 	cd .dependencies/isl-0.23 && make install
-	touch lib/libisl.a
+	touch lib64/libisl.a
 
 .dependencies/isl-0.23/libisl.la: .dependencies/isl-0.23/Makefile
 	cd .dependencies/isl-0.23 && make -j $(MAXIMUM_CPUS) && touch libisl.la
 	
 .dependencies/isl-0.23/Makefile: .dependencies/isl-0.23/configure
-	cd .dependencies/isl-0.23 && ./configure --prefix="$(makefile_directory)" CPPFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib"
+	cd .dependencies/isl-0.23 && ./configure --prefix="$(makefile_directory)" CPPFLAGS="-I$(makefile_directory)/include" LDFLAGS="-L$(makefile_directory)/lib64"
 	touch .dependencies/isl-0.23/Makefile
 
 .dependencies/isl-0.23/configure: .dependencies/isl-0.23.tar.gz
@@ -231,8 +231,9 @@ doc:
 include:
 	@-mkdir -p include
 	
-lib:
-	@-mkdir -p lib
+lib64:
+	@-mkdir -p lib64
+	@-ln -s lib64 lib
 
 src:
 	@-mkdir -p src
