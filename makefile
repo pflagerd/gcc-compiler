@@ -56,9 +56,9 @@ bin/flex: .dependencies/flex-2.6.3/src/flex | bin lib64
 	cd .dependencies/flex-2.6.3 && ./configure --prefix="$(makefile_directory)"
 	touch .dependencies/flex-2.6.3/Makefile
 
-.dependencies/flex-2.6.3/configure: .dependencies/flex-2.6.3.tar.gz
+.dependencies/flex-2.6.3/configure: .dependencies/flex-2.6.3.tar.gz | bin/automake
 	cd .dependencies && tar xzf flex-2.6.3.tar.gz
-	cd .dependencies/flex-2.6.3 && ./autogen.sh
+	#cd .dependencies/flex-2.6.3 && ./autogen.sh
 	touch .dependencies/flex-2.6.3/configure
 
 .dependencies/flex-2.6.3.tar.gz: makefile | .dependencies 
@@ -216,6 +216,51 @@ lib64/libisl.a: .dependencies/isl-0.23/libisl.la | lib64 include
 	cd .dependencies && wget -N http://isl.gforge.inria.fr/isl-0.23.tar.gz && touch isl-0.23.tar.gz
 	   
 
+#
+# automake: http://ftp.gnu.org/gnu/automake/automake-1.5.tar.gz
+#
+bin/automake: .dependencies/automake-1.5/automake | bin
+	cd .dependencies/automake-1.5 && make install
+	touch bin/automake
+	hash -r
+
+.dependencies/automake-1.5/automake: .dependencies/automake-1.5/Makefile
+	cd .dependencies/automake-1.5 && make -j $(MAXIMUM_CPUS) && touch info
+
+.dependencies/automake-1.5/Makefile: .dependencies/automake-1.5/configure
+	cd .dependencies/automake-1.5 && ./configure --prefix="$(makefile_directory)" 
+	touch .dependencies/automake-1.5/Makefile
+	   
+.dependencies/automake-1.5/configure: .dependencies/automake-1.5.tar.gz # bin/libtool
+	cd .dependencies && tar xzf automake-1.5.tar.gz && touch automake-1.5/configure
+	
+.dependencies/automake-1.5.tar.gz: makefile | .dependencies
+	cd .dependencies && wget -N http://ftp.gnu.org/gnu/automake/automake-1.5.tar.gz && touch automake-1.5.tar.gz
+	   
+
+
+#
+# libtool: http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.gz
+#
+bin/libtool: .dependencies/libtool-2.4.6/libtool | bin
+	cd .dependencies/libtool-2.4.6 && make install
+	touch bin/libtool
+	hash -r
+
+.dependencies/libtool-2.4.6/libtool: .dependencies/libtool-2.4.6/Makefile
+	cd .dependencies/libtool-2.4.6 && make -j $(MAXIMUM_CPUS) && touch info
+
+.dependencies/libtool-2.4.6/Makefile: .dependencies/libtool-2.4.6/configure
+	cd .dependencies/libtool-2.4.6 && ./configure --prefix="$(makefile_directory)" 
+	touch .dependencies/libtool-2.4.6/Makefile
+	   
+.dependencies/libtool-2.4.6/configure: .dependencies/libtool-2.4.6.tar.gz bin/libtool
+	cd .dependencies && tar xzf libtool-2.4.6.tar.gz && touch libtool-2.4.6/configure
+	
+.dependencies/libtool-2.4.6.tar.gz: makefile | .dependencies
+	cd .dependencies && wget -N http://ftp.gnu.org/gnu/libtool/libtool-2.4.6.tar.gz && touch libtool-2.4.6.tar.gz
+	   
+
 
 #
 # Directories
@@ -242,3 +287,4 @@ src:
 
 clean:
 	rm -rf .dependencies
+	rm -rf bin include info lib64 share x86_64-pc-linux-gnu
