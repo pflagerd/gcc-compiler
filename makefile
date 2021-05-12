@@ -286,5 +286,4 @@ src:
 
 
 clean:
-	rm -rf .dependencies
-	rm -rf bin include info lib64 share x86_64-pc-linux-gnu
+	rm -rf .dependencies bin include info lib lib64 share x86_64-pc-linux-gnu
